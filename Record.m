@@ -2,7 +2,7 @@ devReader = audioDeviceReader;
 devWriter = audioDeviceWriter;
 fileWriter = dsp.AudioFileWriter('commit_log.wav','FileFormat','WAV');
 fileReader = dsp.AudioFileReader('Filename', ...
-                                    'E:\CloudMusic\Liberation.mp3');
+                                    './Liberation.mp3');
 SPF = 1024;
 devReader.SamplesPerFrame = SPF;
 fileReader.SamplesPerFrame = SPF;
@@ -15,7 +15,7 @@ while toc < 20
   toc
   [error, nOverrun] = record(devReader);
   signal = step(fileReader);
-  output = error + signal / 2;
+  output = error + signal ;
   step(fileWriter, output);
   play(devWriter, output);
   plot(error)
