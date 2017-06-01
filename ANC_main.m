@@ -1,4 +1,3 @@
-% Currently we will working on 
 % Noise = audioDeviceReader;
 % setup(Nosie);% Initialize audio device
 SPF = 1024;
@@ -6,21 +5,25 @@ Noise = dsp.AudioFileReader( ...
     'Filename','./WhiteNoise.wav', ...
     'SamplesPerFrame', SPF);
 Signal = dsp.AudioFileReader(...
-    'Filename', './Liberation.mp3', ...
+    'Filename', './Liberation.wav', ...
     'SamplesPerFrame', SPF);
 devWriter = audioDeviceWriter;
 
-L = 8;
-tic;
+L = 16;
 e = zeros(1, L);
 x = zeros(1, L);
 y = zeros(1, L);
 w = zeros(1, L);
-P = 0;
+
+P = 1;
+c = 1;
 alpha = 0.99;
-mu = 0.1;
+
+mu = 1;
 mimc = 0;
-%while toc < 0.01
+
+tic;
+while toc < 20
   %[error, nOverrun] = record(devReader);
   % take noise
   signal_frame = step(Signal);
@@ -30,21 +33,26 @@ mimc = 0;
   cancel_frame(1, 1) = mimc;
   
   for samp_cnt = 1: SPF
-      samp = noise_frame(samp_cnt) - y(L)
-      e = [e(2: L) samp];
-      x = y + e;
-      P = alpha * x(L).^2 + (1-alpha) * P;
-      w = LMS(x, samp, w, P, mu);
-      mimc = w * wrev(x');
-      y = [y(2: L) mimc];
+      %samp_cnt
+      samp = noise_frame(samp_cnt) - mimc;  % Take the psudo sample
+      e = [samp e(1: L-1) ];                % add it to history
+      x = y + e;                            % calculate the estimate noise
+      mimc = x * w';                        % mimc the next noise
+      y = [mimc y(1: L-1)];                 % add it to mimc history
       if samp_cnt ~= SPF
-          cancel_frame(samp_cnt + 1) = mimc;
+          cancel_frame(samp_cnt + 1) = mimc;% add it to play frame
       end
+      P = alpha * (x * x') + (1-alpha) * P; % Update w
+      w = w + mu * samp * x / (P + c);
   end
-  output = cancel_frame;
+  plot(cancel_frame);hold on;
+  plot(noise_frame);
+  hold off;
+  pause
+  output = noise_frame - cancel_frame;
   play(devWriter, output);
   % step(fileWriter, output);
-%end
+end
 
     
 release(Noise);
