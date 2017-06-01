@@ -1,6 +1,7 @@
+clear
 % Noise = audioDeviceReader;
 % setup(Nosie);% Initialize audio device
-SPF = 1024;
+SPF = 1024;                                 % SamplesPerFrame
 Noise = dsp.AudioFileReader( ...
     'Filename','./WhiteNoise.wav', ...
     'SamplesPerFrame', SPF);
@@ -19,7 +20,7 @@ P = 1;
 c = 1;
 alpha = 0.99;
 
-mu = 1;
+mu = 0.003;
 mimc = 0;
 
 tic;
@@ -33,21 +34,18 @@ while toc < 20
   cancel_frame(1, 1) = mimc;
   
   for samp_cnt = 1: SPF
-      %samp_cnt
       samp = noise_frame(samp_cnt) - mimc;  % Take the psudo sample
-      e = [samp e(1: L-1) ];                % add it to history
+      e = [samp e(1: L-1)];                 % add it to history
       x = y + e;                            % calculate the estimate noise
       mimc = x * w';                        % mimc the next noise
       y = [mimc y(1: L-1)];                 % add it to mimc history
       if samp_cnt ~= SPF
           cancel_frame(samp_cnt + 1) = mimc;% add it to play frame
       end
-      P = alpha * (x * x') + (1-alpha) * P; % Update w
-      w = w + mu * samp * x / (P + c);
+      P = alpha * (x * x') + (1-alpha) * P; % Update P & w
+      w = w - mu * samp * x / (P + c);
   end
-  plot(cancel_frame);hold on;
-  plot(noise_frame);
-  hold off;
+  plot(noise_frame - cancel_frame);
   pause
   output = noise_frame - cancel_frame;
   play(devWriter, output);
