@@ -1,12 +1,6 @@
-i = 0;
-y0 = [];        % the noise
-while(i < 300000)
-    y0 = [y0 0];
-    i = i + 1;
-    if (mod(i,10000) == 0 )
-        i
-    end
-end
+duration = 10;
+fs = 44100;
+y0 = zeros(1, duration * fs);
 
 y0 = y0';
 y1 = awgn(y0,10);
@@ -15,12 +9,7 @@ plot(y1(1:500));
 devWriter = audioDeviceWriter;
 %fileWriter = dsp.AudioFileWriter('noise.wav','FileFormat','WAV');
 tic;
-audiowrite('noise.wav',y1,44100);
-% while(toc < 20)
-%     toc
-%     step(fileWriter, output);
-%     % play(devWriter, y1);
-% end
+audiowrite('WhiteNoise.wav', y1, fs);
 
 release(devWriter);     % close the audio output device
 %release(fileWriter);    % close the output file
