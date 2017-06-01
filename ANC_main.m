@@ -10,7 +10,7 @@ Signal = dsp.AudioFileReader(...
     'SamplesPerFrame', SPF);
 devWriter = audioDeviceWriter;
 
-L = 16;
+L = 4;
 e = zeros(1, L);
 x = zeros(1, L);
 y = zeros(1, L);
@@ -47,16 +47,12 @@ while toc < 20
   end
   plot(noise_frame - cancel_frame);
   pause
-  output = noise_frame - cancel_frame;
-  play(devWriter, output);
+  output = signal_frame;
+  % play(devWriter, output);
   % step(fileWriter, output);
 end
 
     
 release(Noise);
 release(Signal);
-% release(devReader);     % release the audio device
-% release(devWriter);     % close the audio output device
-% release(fileWriter);    % close the output file
-% release(fileReader);    % close the input file
 disp('Noise Canceler exited.');
