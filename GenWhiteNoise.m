@@ -1,4 +1,4 @@
-duration = 10;
+duration = 60;
 fs = 44100;
 y0 = zeros(1, duration * fs);
 
