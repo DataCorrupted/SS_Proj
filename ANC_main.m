@@ -13,6 +13,13 @@ NLMS = dsp.LMSFilter('Length', 16, ...
    'AdaptInputPort', true, ...
    'StepSizeSource', 'Input port', ...
    'WeightsOutputPort', false);
+
+NLMS_2 = dsp.LMSFilter('Length', 16, ...
+   'Method', 'Normalized LMS',...
+   'AdaptInputPort', true, ...
+   'StepSizeSource', 'Input port', ...
+   'WeightsOutputPort', false);
+
 FIR = dsp.FIRFilter('Numerator', fir1(8,[.25, .75]));
 
 a = 1;      % adaptation control
@@ -24,10 +31,10 @@ while toc < 60
   signal_frame = step(Signal);
   noise_frame_sim = step(Noise);
   % duplicate noise frame to get two channel
-  noise_sim_two = [noise_frame_sim noise_frame_sim];
+  % noise_sim_two = [noise_frame_sim noise_frame_sim];
   
   % sampling
-  mixture = signal_frame + noise_sim_two;
+  mixture = signal_frame + noise_frame_sim;
   % duplicate noise frame to get two channel
   noise_frame = mixture - signal_frame;
   
@@ -36,7 +43,7 @@ while toc < 60
   [ ~ , result_left] = NLMS(noise_frame(:,1), mixture_left, mu, a);
   
   mixture_right = FIR(noise_frame(:,2)) + signal_frame(:, 2); % Noise + Signal
-  [ ~ , result_right] = NLMS(noise_frame(:,2), mixture_right, mu, a);
+  [ ~ , result_right] = NLMS_2(noise_frame(:,2), mixture_right, mu, a);
   
   output = [result_left result_right];
   play(devWriter, output);

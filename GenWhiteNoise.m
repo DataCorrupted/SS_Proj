@@ -9,7 +9,9 @@ plot(y1(1:500));
 devWriter = audioDeviceWriter;
 %fileWriter = dsp.AudioFileWriter('noise.wav','FileFormat','WAV');
 tic;
-audiowrite('WhiteNoise.wav', y1, fs);
+% duplicate the y_1
+y2 = [y1 y1];
+audiowrite('WhiteNoise.wav', y2, fs);
 
 release(devWriter);     % close the audio output device
 %release(fileWriter);    % close the output file
