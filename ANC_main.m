@@ -16,16 +16,20 @@ NLMS = dsp.LMSFilter('Length', 16, ...
 FIR = dsp.FIRFilter('Numerator', fir1(8,[.25, .75]));
 
 a = 1;      % adaptation control
-mu = 0.05;  % step size
+mu = 0.3;   % step size
 
 tic;
-while toc < 30
+while toc < 60
   signal_frame = step(Signal);
   noise_frame = step(Noise);
   
-  mixture_frame = FIR(noise_frame) + signal_frame; % Noise + Signal
-  [ ~ , result_frame] = NLMS(noise_frame, mixture_frame, mu, a);
-  output = result_frame;
+  mixture_left = FIR(noise_frame) + signal_frame(:, 1); % Noise + Signal
+  [ ~ , result_left] = NLMS(noise_frame, mixture_left, mu, a);
+  
+  mixture_right = FIR(noise_frame) + signal_frame(:, 2); % Noise + Signal
+  [ ~ , result_right] = NLMS(noise_frame, mixture_right, mu, a);
+  
+  output = [result_left result_right];
   play(devWriter, output);
 end
 
