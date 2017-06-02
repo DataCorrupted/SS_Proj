@@ -23,11 +23,13 @@ while toc < 60
   % stimulation signal
   signal_frame = step(Signal);
   noise_frame_sim = step(Noise);
+  % duplicate noise frame to get two channel
+  noise_sim_two = [noise_frame_sim noise_frame_sim];
   
   % sampling
-  % duplicate noise frame to get two channel
-  mixture = signal_frame + [noise_frame_sim nois e_frame_sim];
+  mixture = signal_frame + noise_sim_two;
   noise_frame = mixture - signal_frame;
+  
   
   mixture_left = FIR(noise_frame(:,1)) + signal_frame(:, 1); % Noise + Signal
   [ ~ , result_left] = NLMS(noise_frame(:,1), mixture_left, mu, a);
