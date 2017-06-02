@@ -6,7 +6,7 @@ Noise = dsp.AudioFileReader( ...
 Signal = dsp.AudioFileReader(...
     'Filename', './Liberation.wav', ...
     'SamplesPerFrame', SPF);
-devWriter = audioDeviceWriter;
+devWriter = audioDeviceWriter('Device', 'Built-in Output');
 
 NLMS = dsp.LMSFilter('Length', 16, ...
    'Method', 'Normalized LMS',...
@@ -20,14 +20,20 @@ mu = 0.3;   % step size
 
 tic;
 while toc < 60
+  % stimulation signal
   signal_frame = step(Signal);
-  noise_frame = step(Noise);
+  noise_frame_sim = step(Noise);
   
-  mixture_left = FIR(noise_frame) + signal_frame(:, 1); % Noise + Signal
-  [ ~ , result_left] = NLMS(noise_frame, mixture_left, mu, a);
+  % sampling
+  % duplicate noise frame to get two channel
+  mixture = signal_frame + [noise_frame_sim nois e_frame_sim];
+  noise_frame = mixture - signal_frame;
   
-  mixture_right = FIR(noise_frame) + signal_frame(:, 2); % Noise + Signal
-  [ ~ , result_right] = NLMS(noise_frame, mixture_right, mu, a);
+  mixture_left = FIR(noise_frame(:,1)) + signal_frame(:, 1); % Noise + Signal
+  [ ~ , result_left] = NLMS(noise_frame(:,1), mixture_left, mu, a);
+  
+  mixture_right = FIR(noise_frame(:,2)) + signal_frame(:, 2); % Noise + Signal
+  [ ~ , result_right] = NLMS(noise_frame(:,2), mixture_right, mu, a);
   
   output = [result_left result_right];
   play(devWriter, output);
