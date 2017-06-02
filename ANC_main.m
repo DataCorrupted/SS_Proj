@@ -29,7 +29,6 @@ while toc < 60
   % sampling
   mixture = signal_frame + noise_sim_two;
   % duplicate noise frame to get two channel
-  mixture = signal_frame + [noise_frame_sim noise_frame_sim];
   noise_frame = mixture - signal_frame;
   
   
