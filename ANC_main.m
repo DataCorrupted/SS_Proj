@@ -8,19 +8,15 @@ Signal = dsp.AudioFileReader(...
     'SamplesPerFrame', SPF);
 devWriter = audioDeviceWriter;
 
-NLMS = dsp.LMSFilter('Length', 16, ...
+NLMS_left = dsp.LMSFilter('Length', 16, ...
    'Method', 'Normalized LMS',...
    'AdaptInputPort', true, ...
    'StepSizeSource', 'Input port', ...
    'WeightsOutputPort', false);
 
-NLMS_2 = dsp.LMSFilter('Length', 16, ...
-   'Method', 'Normalized LMS',...
-   'AdaptInputPort', true, ...
-   'StepSizeSource', 'Input port', ...
-   'WeightsOutputPort', false);
+NLMS_right = NLMS_left.clone();
 
-FIR = dsp.FIRFilter('Numerator', fir1(8,[.25, .75]));
+FIR = dsp.FIRFilter('Numerator', fir1(8, [.25, .75]));
 
 a = 1;      % adaptation control
 mu = 0.3;   % step size
@@ -40,12 +36,12 @@ while toc < 60
   
   
   mixture_left = FIR(noise_frame(:,1)) + signal_frame(:, 1); % Noise + Signal
-  [ ~ , result_left] = NLMS(noise_frame(:,1), mixture_left, mu, a);
+  [ ~ , result_left] = NLMS_left(noise_frame(:,1), mixture_left, mu, a);
   
   mixture_right = FIR(noise_frame(:,2)) + signal_frame(:, 2); % Noise + Signal
-  [ ~ , result_right] = NLMS_2(noise_frame(:,2), mixture_right, mu, a);
-  
-  output = [result_left result_right];
+  [ ~ , result_right] = NLMS_right(noise_frame(:,2), mixture_right, mu, a);
+  % result_right = FIR(result_right);
+  output = [ result_left result_right ];
   play(devWriter, output);
 end
 
