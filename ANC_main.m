@@ -6,7 +6,7 @@ Noise = dsp.AudioFileReader( ...
 Signal = dsp.AudioFileReader(...
     'Filename', './Liberation.wav', ...
     'SamplesPerFrame', SPF);
-devWriter = audioDeviceWriter('Device', 'Built-in Output');
+devWriter = audioDeviceWriter;
 
 NLMS = dsp.LMSFilter('Length', 16, ...
    'Method', 'Normalized LMS',...
@@ -28,6 +28,8 @@ while toc < 60
   
   % sampling
   mixture = signal_frame + noise_sim_two;
+  % duplicate noise frame to get two channel
+  mixture = signal_frame + [noise_frame_sim noise_frame_sim];
   noise_frame = mixture - signal_frame;
   
   
