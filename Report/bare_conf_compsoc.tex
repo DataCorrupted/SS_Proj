@@ -419,19 +419,8 @@ Here is abstraction.
 
 
 \section{Introduction}
-% no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE Computer Society conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
 
-\hfill mds
- 
-\hfill August 26, 2015
-
-%Porrf of FXLMS
+%Proof of FXLMS
 \section{Proof of FXLMS}
 
 	It is clear in Gan and others paper\cite{Gan2005Adaptive,Song2005Robust} how FXLMS should be implemented and used in ANC, but they didn't provide a clear proof of why should $\omega_l$ be updated in the following way:
@@ -481,15 +470,22 @@ I wish you the best of success.
 Implementation details goes here.
 
 \subsection{Simulink approach}
-The Simulink approach is shown in Figure 1.Note that this is an offline simulation, so we use noise generator instead of one microphone. mixture of noise and music instead of another microphone.
+	The Simulink approach is shown in Figure 1.Note that this is an offline simulation, 
+	so we use noise generator instead of one microphone. mixture of noise and music instead of another microphone.
 \par
-We use a random generator to simulate the white noise. Then there will be a LPF to filter the high frequency noise. The Digital Filter1 and Lowpass1 in the Figure 1 do this thing.
+	We use a random generator to simulate the white noise. 
+	Then there will be a LPF to filter the high frequency noise. 
+	The Digital Filter1 and Lowpass1 in the Figure 1 do this thing.
 \par
-And for the LMS Fliter part , there are two input , one is the noise, another is the the mixture of noise and music. As proofed above, the LMS Fliter can then get the Error, easy to see the Error should be close to the music.
+	And for the LMS Fliter part , there are two input , one is the noise,
+	another is the the mixture of noise and music. As proofed above,
+	the LMS Fliter can then get the Error, easy to see the Error should be close to the music.
 \par
-The Audio Device is the Error, which should be music without noise. And in the scope we can see the waveform of noise , music , mixture , and Error.
+	The Audio Device is the Error, which should be music without noise. 
+	And in the scope we can see the waveform of noise , music , mixture , and Error.
 \par
-But there are still some bugs, for example , the simulink do not support high frequency , and there will be more noise when the input "music" is speech rather than music.
+	But there are still some bugs, for example , the simulink do not support high frequency , 
+	and there will be more noise when the input "music" is speech rather than music.
 \begin{figure} 
 	\begin{center}     
      \includegraphics[width=10cm]{ANC_try1.pdf}
