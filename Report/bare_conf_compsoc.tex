@@ -394,18 +394,6 @@ Email: pangaq@shanghaitech.edu.cn}}
 
 % make the title area
 \maketitle
-
-% As a general rule, do not put math, special symbols or citations
-% in the abstract
-\begin{abstract}
-Here is abstraction.
-\end{abstract}
-
-% no keywords
-
-
-
-
 % For peer review papers, you can put extra information on the cover
 % page as needed:
 % \ifCLASSOPTIONpeerreview
@@ -417,12 +405,23 @@ Here is abstraction.
 \IEEEpeerreviewmaketitle
 
 
-
+%Introduction
 \section{Introduction}
-
+	As a course project of \emph{Signal and System}, we worked adaptive noise controller.
+\par
+	The basic assumption is, 
+	when sample rete is large enough, we can assume that the samples form a line.
+	Based on this assumption, we can predict the next sample, 
+	in this way we can build an adaptive noise controller.
+\par 
+	After reading serval paper we split our three to work on proof of FXLMS, Simulink approach and 
+	MATLAB approach. At the end we realized that, 
+	although theoretically it worked since we proved it, 
+	we can't make it online due to IO latency of PC.
+	However, we managed to finished a offline prototype in both Simulink and MATLAB.
 %Proof of FXLMS
 \section{Proof of FXLMS}
-
+\par
 	It is clear in Gan and others paper\cite{Gan2005Adaptive,Song2005Robust} how FXLMS should be implemented and used in ANC, but they didn't provide a clear proof of why should $\omega_l$ be updated in the following way:
 	$$\omega(n+1) = \omega(n) + \frac{\mu}{\widehat P_x(n)+c}e^Tx$$
 	Here we will give a simple proof, or an explanation for this update.
@@ -498,12 +497,22 @@ Implementation details goes here.
 \end{figure}
 
 \subsection{MATLAB approach}
-The MATLAB approach support two channel audio. The implementation is similar to Simulink approach.
+	The MATLAB approach support two channel audio. 
+	The implementation is similar to Simulink approach.
 \par
-For simulation, we use a two channel audio file and a pre-generated two channel noise file to simulate the real-time environment. The MATLAB code use dsp.AudioFileReader to read in signal and noise files. Here, we simulate one microphone to get the mixture of signal and noise from the environment. 
+	For simulation, 
+	we use a two channel audio file and a pre-generated two channel noise file 
+	to simulate the real-time environment. 
+	The MATLAB code use dsp.AudioFileReader to read in signal and noise files.
+	Here, we simulate one microphone to get the mixture of signal and noise from the environment. 
 \par
-In the system, first we subtract the noise from the mixture as noise = mixture - signal. Then the LMS algorithm uses noise and music to get the output like what has been mentioned above. In the code, the dsp.LMSfilter is used to perform the algorithm. Also, the low-pass filter used in simulink approach is also used here.
-As for the two-channel part, the input is separated into two ANC systems, and the output is consist of outputs from both ANC systems.
+	In the system, first we subtract the noise from the mixture as noise = mixture - signal. 
+	Then the FXLMS algorithm uses noise and music to get the output like 
+	what has been mentioned above. In the code, the dsp.LMSfilter is used to perform the algorithm.
+	Also, the low-pass filter used in simulink approach is also used here.
+	As for the two-channel part, 
+	the input is separated into two ANC systems, 
+	and the output is consist of outputs from both ANC systems.
 
 % I/O latency
 \section{I/O latency}
@@ -513,7 +522,7 @@ MATLAB audio latency test program audioLatencyMeasurementExampleApp.m is used to
 \par
 
 % latency test result
-\begin{table}[latency]
+\begin{table}[]
 \centering
 \caption{Audio I/O latency}
 \label{my-label}
