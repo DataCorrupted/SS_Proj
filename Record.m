@@ -2,7 +2,7 @@ devReader = audioDeviceReader;
 devWriter = audioDeviceWriter;
 fileWriter = dsp.AudioFileWriter('commit_log.wav','FileFormat','WAV');
 fileReader = dsp.AudioFileReader('Filename', ...
-                                    'E:\CloudMusic\Liberation.mp3');
+                                    '.\Source\Liberation.mp3');
 SPF = 1024;
 devReader.SamplesPerFrame = SPF;
 fileReader.SamplesPerFrame = SPF;
