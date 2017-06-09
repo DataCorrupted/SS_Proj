@@ -26,12 +26,9 @@ while toc < 60
   % stimulation signal
   signal_frame = step(Signal);
   noise_frame_sim = step(Noise);
-  % duplicate noise frame to get two channel
-  % noise_sim_two = [noise_frame_sim noise_frame_sim];
   
-  % sampling
+  % sampling mixture from microphone
   mixture = signal_frame + noise_frame_sim;
-  % duplicate noise frame to get two channel
   noise_frame = mixture - signal_frame;
   
   
