@@ -6,7 +6,7 @@ Report/ is all Latex files explaining what we did, refer to Report.pdf, inside
 Pre/ contain Files used for presentation are in 
 Source/ contain test musics, these test files are in 2 wavs are our tests. One(Liberation.wav) is signal, another is white noise.
 
-ANC_*.slx are finished ones. Anqi Pang / Jianxion Cai finished it.
+ANC_*.slx are finished ones.
 Record.m is a demo showing that the latency is huge.
 ANC_main.m is a MATLAB implementation of ANC.
 
